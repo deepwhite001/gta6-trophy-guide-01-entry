@@ -1,59 +1,94 @@
-// GTA VI trophy guide entry (Node 22, standard library only): the guide is this
-// directory's app/ folder — plain static files a browser opens at app/index.html,
-// offline by design (it loads nothing over the network), and its trophy list and
-// guides are app/data/trophies.json. This file hands it in: it checks the entry
-// against the scorer's caps, copies app/ and screenshots/ beside this file to
-// /output, and writes /output/dossier.json, the summary the judge reads (your
-// screenshots, the first load's files and bytes, and your source), with the
-// vendored make.fun library. Leave vendor/makefun-frontend.ts as it is: the
-// scorer requires dossier.json to be byte for byte what its own copy writes.
+// GTA VI trophy guide entry (Node 22, standard library only). The guide itself
+// is the static site in app/ — open app/index.html in a browser, no build step,
+// no network at run time. This file is only the hand-in: it checks the entry
+// against the scorer's caps, copies app/ and screenshots/ into the output
+// directory, and writes /output/dossier.json with the vendored make.fun
+// library. Do not touch vendor/makefun-frontend.ts: the scorer rebuilds the
+// dossier with its own copy of that library and compares the two byte for
+// byte, so this file must call it exactly as the starter does.
 //
-// Serve it locally with `node serve.ts`, then open http://localhost:8080.
-// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
+// Run it locally with:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { cpSync, existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-frontend.ts';
 
-const here = fileURLToPath(new URL('.', import.meta.url));
-const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const root = fileURLToPath(new URL('.', import.meta.url));
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const shotDir = join(root, 'screenshots');
+const appDir = join(root, 'app');
 
-// The scorer's own caps (reference/gate.json): check them here first so a bad
-// entry fails loudly on my machine instead of quietly on the server.
-const shotDir = join(here, 'screenshots');
-const shotNames = existsSync(shotDir) ? readdirSync(shotDir).sort() : [];
-if (shotNames.length === 0 || shotNames.length > 4) {
-  throw new Error(`expected 1 to 4 screenshots, found ${shotNames.length}`);
+// The scorer's caps (reference/gate.json). Fail loudly here, on my machine,
+// rather than quietly on the server.
+const MAX_SHOTS = 4;
+const MAX_SHOT_BYTES = 262144;
+const MAX_APP_FILES = 993;
+const MAX_APP_BYTES = 50331648;
+
+function fail(message: string): never {
+  throw new Error(message);
 }
-for (const name of shotNames) {
-  const size = statSync(join(shotDir, name)).size;
-  if (size > 262144) throw new Error(`screenshot ${name} is ${size} bytes, over the 256 KiB cap`);
+
+const shots = existsSync(shotDir) ? readdirSync(shotDir).sort() : [];
+if (shots.length === 0 || shots.length > MAX_SHOTS) {
+  fail(`expected 1 to ${MAX_SHOTS} screenshots, found ${shots.length}`);
 }
-let appFiles = 0;
-let appBytes = 0;
-const walk = (dir: string): void => {
+for (const name of shots) {
+  const bytes = statSync(join(shotDir, name)).size;
+  if (bytes > MAX_SHOT_BYTES) fail(`screenshot ${name} is ${bytes} bytes, over the 256 KiB cap`);
+}
+
+let fileCount = 0;
+let byteCount = 0;
+function countFiles(dir: string): void {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.isDirectory()) walk(join(dir, entry.name));
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) countFiles(path);
     else {
-      appFiles += 1;
-      appBytes += statSync(join(dir, entry.name)).size;
+      fileCount += 1;
+      byteCount += statSync(path).size;
     }
   }
-};
-walk(join(here, 'app'));
-if (appFiles > 993) throw new Error(`app/ holds ${appFiles} files, over the 993 cap`);
-if (appBytes > 50331648) throw new Error(`app/ is ${appBytes} bytes, over the 48 MiB cap`);
+}
+countFiles(appDir);
+if (fileCount > MAX_APP_FILES) fail(`app/ holds ${fileCount} files, over the 993 cap`);
+if (byteCount > MAX_APP_BYTES) fail(`app/ is ${byteCount} bytes, over the 48 MiB cap`);
 
-mkdirSync(out, { recursive: true });
-cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
-mkdirSync(join(out, 'screenshots'), { recursive: true });
-if (existsSync(shotDir)) cpSync(shotDir, join(out, 'screenshots'), { recursive: true });
+// The guide is only as good as its data: the trophy file must parse, hold
+// exactly 55 trophies in list order, and match the official grade split.
+// A short or corrupt list must fail here, not on the server.
+const trophiesDoc = JSON.parse(readFileSync(join(appDir, 'data', 'trophies.json'), 'utf8'));
+const trophies = trophiesDoc.trophies;
+if (!Array.isArray(trophies) || trophies.length !== 55) {
+  fail(`trophies.json holds ${Array.isArray(trophies) ? trophies.length : 'no'} trophies, expected 55`);
+}
+const grades: Record<string, number> = {};
+for (const [index, trophy] of trophies.entries()) {
+  if (trophy.id !== index + 1) fail(`trophy at position ${index} has id ${trophy.id}, expected ${index + 1}`);
+  if (!trophy.name || !trophy.description || !trophy.guide || !trophy.source_url) {
+    fail(`trophy ${trophy.id} is missing a name, description, guide or source`);
+  }
+  grades[trophy.grade] = (grades[trophy.grade] || 0) + 1;
+}
+if (grades.platinum !== 1 || grades.gold !== 2 || grades.silver !== 6 || grades.bronze !== 46) {
+  fail(`grade split is ${JSON.stringify(grades)}, expected 1 platinum, 2 gold, 6 silver, 46 bronze`);
+}
 
-// Only text_max_bytes shapes the bytes; the other caps refuse an entry the
-// scorer would refuse, so they must match the scorer's own numbers.
+mkdirSync(outDir, { recursive: true });
+cpSync(appDir, join(outDir, 'app'), { recursive: true });
+cpSync(shotDir, join(outDir, 'screenshots'), { recursive: true });
+
+// The caps below must match the scorer's own numbers: only text_max_bytes
+// shapes the bytes, the rest refuse an entry the scorer would refuse.
 writeFileSync(
-  join(out, 'dossier.json'),
-  buildDossier(out, { text_max_bytes: 163840, screenshots: { max: 4, max_bytes: 262144 }, app_max_files: 993, app_max_bytes: 50331648 }),
+  join(outDir, 'dossier.json'),
+  buildDossier(outDir, {
+    text_max_bytes: 163840,
+    screenshots: { max: MAX_SHOTS, max_bytes: MAX_SHOT_BYTES },
+    app_max_files: MAX_APP_FILES,
+    app_max_bytes: MAX_APP_BYTES,
+  }),
 );
+console.log(`dossier written to ${join(outDir, 'dossier.json')}`);

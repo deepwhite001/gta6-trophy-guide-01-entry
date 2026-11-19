@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/gta6-trophy-guide-01/deepwhite001/gta6-trophy-guide-01-entry/rank.svg)](https://make.fun/bounty/gta6-trophy-guide-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-guide-01)
 [![reward](https://make.fun/badge/gta6-trophy-guide-01/deepwhite001/gta6-trophy-guide-01-entry/reward.svg)](https://make.fun/bounty/gta6-trophy-guide-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-guide-01)
 
-An offline trophy guide and tracker for Grand Theft Auto VI on PlayStation 5: all 55 trophies with a guide written for each one, a checklist that saves your progress in the browser, export and import of that progress, filters by grade and kind, spoiler hiding, a platinum roadmap, missable markers, and a source cited beside every guide. It runs entirely from static files with no network requests, so it works with the network off.
+An offline guide and tracker for all 55 Grand Theft Auto VI trophies on PlayStation 5: every trophy gets its own freshly written guide and tip, a source cited beside it, and a checklist that saves your progress in the browser. It filters by grade, kind and status, hides story spoilers until you ask for them, flags the one missable trophy and the three entries with no verified method yet, and lays out the road to the platinum in three steps. Everything is plain static files — it works with the network off.
 
 ## Run it
 

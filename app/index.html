@@ -3,56 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leonida Trophy Guide — GTA VI, all 55 trophies</title>
+<title>Leonida Trophy Guide — every GTA VI trophy, tracked</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="masthead">
-  <div class="masthead-inner">
-    <p class="kicker">Grand Theft Auto VI &middot; PlayStation 5</p>
+<header class="top">
+  <div class="top-inner">
+    <p class="eyebrow">Grand Theft Auto VI &middot; PlayStation 5 &middot; 55 trophies</p>
     <h1>Leonida Trophy Guide</h1>
-    <p class="lede">All 55 trophies, each with its own guide, a tracker that remembers your progress, and a road map to the platinum. Works fully offline — no account, no network, nothing leaves your browser.</p>
-    <div class="progress-wrap" aria-label="Overall progress">
-      <div class="progress-bar"><span id="progressFill"></span></div>
-      <p class="progress-text"><strong id="progressCount">0 / 55</strong> earned &middot; <span id="progressPct">0%</span> &middot; <span id="gradeCounts"></span></p>
+    <p class="intro">One page for the whole list: an original guide for each trophy, a tracker that keeps your progress in this browser, and a route to the platinum that takes about 200 hours. It runs entirely offline — no account, no network, nothing leaves your device.</p>
+    <div class="dashboard" aria-label="Your progress">
+      <div class="meter">
+        <div class="meter-track"><span id="progressFill"></span></div>
+        <p class="meter-line"><strong id="progressCount">0 / 55</strong> earned &middot; <span id="progressPct">0%</span></p>
+        <p class="meter-grades" id="gradeCounts"></p>
+      </div>
+      <div class="next">
+        <p class="next-label">Next up</p>
+        <p class="next-text" id="nextUp">Tick a trophy below to start tracking.</p>
+      </div>
     </div>
   </div>
 </header>
 
 <main>
-  <section class="roadmap" id="roadmap" aria-label="Road to the platinum">
-    <h2>Road to the platinum</h2>
-    <p class="roadmap-sub">About 200 hours, difficulty 4 out of 10, one playthrough, no online trophies. The list is long, not hard.</p>
-    <ol class="steps">
+  <section class="plan" id="roadmap" aria-label="Road to the platinum">
+    <h2>The road to the platinum</h2>
+    <p class="plan-sub">Around 200 hours, difficulty 4 out of 10, one playthrough, no online trophies. Long, not hard.</p>
+    <ol class="timeline">
       <li>
-        <h3>Step 1 — Play the story <span class="step-time">60–80 hours</span></h3>
-        <p>Finish the five chapters and do side content as it appears. Story progress already counts toward the 100% checklist, and there are no mission medals to worry about. Keep a manual save at the start of every chapter — there is no mission replay.</p>
+        <span class="step-no">1</span>
+        <div>
+          <h3>Play the story <span class="step-hours">60–80 hours</span></h3>
+          <p>Finish the five chapters and take side content as it appears. Story progress already counts toward the 100% checklist, and there are no mission medals to chase. Keep a manual save at the start of every chapter — there is no mission replay.</p>
+        </div>
       </li>
       <li>
-        <h3>Step 2 — The 100% checklist <span class="step-time">about 100 hours</span></h3>
-        <p>After the credits, Progress &gt; Stats &gt; 100% Completion opens. It is closer to 60% true completion: most lines need only 70–80%, and any 70 of the 80 challenges will do. Only robberies, underwater finds, shooting ranges, drone races and Bret&rsquo;s hunts need everything.</p>
+        <span class="step-no">2</span>
+        <div>
+          <h3>Work the 100% checklist <span class="step-hours">about 100 hours</span></h3>
+          <p>After the credits, Progress &gt; Stats &gt; 100% Completion opens. It is closer to 60% true completion: most lines ask only 70–80%, and any 70 of the 80 challenges will do. Only robberies, underwater finds, shooting ranges, drone races and Bret&rsquo;s hunts ask for everything.</p>
+        </div>
       </li>
       <li>
-        <h3>Step 3 — Strangers and cleanup <span class="step-time">about 10 hours</span></h3>
-        <p>Strangers &amp; Freaks are not part of the 100% checklist, so finish the eight counting strands and mop up anything left. By now most trophies will already have popped.</p>
+        <span class="step-no">3</span>
+        <div>
+          <h3>Strangers and cleanup <span class="step-hours">about 10 hours</span></h3>
+          <p>Strangers &amp; Freaks sit outside the 100% checklist, so finish the eight strands that count and mop up what is left. Most trophies will already have popped by now.</p>
+        </div>
       </li>
     </ol>
-    <div class="warnings" role="note">
-      <h3>Before you start</h3>
+    <aside class="cautions" role="note">
+      <h3>Watch out for</h3>
       <ul>
         <li><strong>One trophy can be missed:</strong> Positive Mental Attitude — meditate with Lucia on the balcony at Jason&rsquo;s house in Chapter 1, the first morning it is offered.</li>
-        <li><strong>Cheats switch trophies off</strong> (and saving), so keep them off on your trophy save.</li>
+        <li><strong>Cheats turn trophies off</strong> (and saving), so keep them off on your trophy save.</li>
         <li><strong>Three trophies have no verified method yet</strong> at launch (In The Beginning…, Bad Luck, I Guess, Ten Pin). They are marked unconfirmed below — do not chase rumors for them.</li>
       </ul>
-    </div>
+    </aside>
   </section>
 
-  <section class="controls" aria-label="Find and filter trophies">
-    <div class="controls-row">
-      <label class="search">Search
+  <section class="toolbar" aria-label="Find and filter trophies">
+    <div class="toolbar-row">
+      <label class="field grow">Search
         <input id="search" type="search" placeholder="Trophy name, mission, keyword…" autocomplete="off">
       </label>
-      <label>Grade
+      <label class="field">Grade
         <select id="grade">
           <option value="all">All grades</option>
           <option value="platinum">Platinum</option>
@@ -61,7 +77,7 @@
           <option value="bronze">Bronze</option>
         </select>
       </label>
-      <label>Kind
+      <label class="field">Kind
         <select id="category">
           <option value="all">All kinds</option>
           <option value="story">Story</option>
@@ -77,14 +93,14 @@
           <option value="platinum">Platinum</option>
         </select>
       </label>
-      <label>Status
+      <label class="field">Status
         <select id="status">
           <option value="all">All</option>
           <option value="earned">Earned</option>
           <option value="todo">Not yet earned</option>
         </select>
       </label>
-      <label>Sort
+      <label class="field">Sort
         <select id="sort">
           <option value="id">In list order</option>
           <option value="grade">By grade</option>
@@ -92,32 +108,32 @@
         </select>
       </label>
     </div>
-    <div class="controls-row">
-      <label class="check"><input id="hideSpoilers" type="checkbox" checked> Hide story spoilers</label>
-      <label class="check"><input id="missableOnly" type="checkbox"> Missable only</label>
-      <span class="spacer"></span>
+    <div class="toolbar-row">
+      <label class="toggle"><input id="hideSpoilers" type="checkbox" checked> Hide story spoilers</label>
+      <label class="toggle"><input id="missableOnly" type="checkbox"> Missable only</label>
+      <span class="fill"></span>
       <button id="exportBtn" type="button">Export progress</button>
-      <label class="import-btn">Import progress <input id="importFile" type="file" accept="application/json,.json"></label>
-      <button id="resetBtn" type="button" class="danger">Reset progress</button>
+      <label class="import-label">Import progress <input id="importFile" type="file" accept="application/json,.json"></label>
+      <button id="resetBtn" type="button" class="warn">Reset progress</button>
     </div>
-    <p class="result-count" id="resultCount" aria-live="polite"></p>
+    <p class="count" id="resultCount" aria-live="polite"></p>
   </section>
 
-  <section class="list" id="list" aria-label="Trophy list"></section>
+  <section class="trophies" id="list" aria-label="Trophy list"></section>
 
-  <section class="sources" aria-label="Sources and notes">
+  <section class="notes" aria-label="Sources and notes">
     <h2>Sources &amp; notes</h2>
     <ul>
       <li>Trophy names, descriptions and grades are the official PlayStation list (55 trophies: 1 platinum, 2 gold, 6 silver, 46 bronze).</li>
-      <li>Guide text is original writing for this guide. Facts were checked against <a href="https://www.powerpyx.com/gta-6-grand-theft-auto-vi-trophy-guide-roadmap/">PowerPyx’s GTA 6 Trophy Guide &amp; Roadmap</a> (18–19 November 2026), with cross-checks from GTABase, GamesRadar+ and Exophase via Push Square for the cryptic entries. Each trophy cites its source beside its guide.</li>
-      <li>Three entries are marked unconfirmed because no guide had reproduced their unlock at launch. They are kept in the list with a warning rather than a guessed method.</li>
+      <li>Guide text is original writing for this guide. Facts were checked against <a href="https://www.powerpyx.com/gta-6-grand-theft-auto-vi-trophy-guide-roadmap/">PowerPyx&rsquo;s GTA 6 Trophy Guide &amp; Roadmap</a> (18–19 November 2026); the missable Chapter 1 meditation was cross-checked against <a href="https://outputlag.com/guides/gta-6-trophy-list/">Output Lag&rsquo;s GTA 6 Trophy List</a>, and the grade split and roadmap figures against GTABase. Each trophy cites its source beside its guide.</li>
+      <li>Three entries are marked unconfirmed because no guide had reproduced their unlock at launch. They stay in the list with a warning rather than a guessed method.</li>
       <li>Progress is stored only in your browser (localStorage). Export and import move it as a JSON file. This is an unofficial fan guide, not affiliated with Rockstar Games or Sony.</li>
     </ul>
   </section>
 </main>
 
-<footer class="colophon">
-  <p>Leonida Trophy Guide — an offline guide for Grand Theft Auto VI on PS5. Data checked 19 November 2026.</p>
+<footer class="foot">
+  <p>Leonida Trophy Guide — an offline guide for Grand Theft Auto VI on PS5. Data checked 20 November 2026.</p>
 </footer>
 
 <script src="app.js"></script>
